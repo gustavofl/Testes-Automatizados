@@ -1,0 +1,25 @@
+PARSER_BEGIN(SyntaxChecker)
+
+public class SyntaxChecker {
+    public static void main(String[] args) {
+        try {
+            new SyntaxChecker(new java.io.StringReader(args[0])).S();
+            System.out.println("Syntax is okay");
+        } catch (Throwable e) {
+            // Catching Throwable is ugly but JavaCC throws Error objects!
+            System.out.println("Syntax check failed: " + e.getMessage());
+        }
+    }
+}
+
+PARSER_END(SyntaxChecker)
+
+SKIP :
+{ <comentario : "#"> }
+<comentario> MORE :
+{ <~[]> }
+<comentario> SKIP :
+{ "\n" | "\r" | "\n\r" : DEFAULT }
+
+void S(): {} { C() <EOF> }
+void C(): {} { <comentario> }
